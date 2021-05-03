@@ -76,7 +76,6 @@ app.use((err,req,res,next)=>{
 
 })
 
-// mongoConnect(()=>
     server.listen("5000",(err)=>{
         if(err){
             console.log(err,"Listening error")
