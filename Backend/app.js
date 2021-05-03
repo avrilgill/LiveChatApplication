@@ -1,41 +1,86 @@
-var createError = require('http-errors');
-var express = require('express');
-var path = require('path');
-var cookieParser = require('cookie-parser');
-var logger = require('morgan');
+//Libraries
+const http = require('http');
+const sockets = require('socket.io');
+const express = require("express");
+const cors = require('cors');
+const app = express();
+const server = http.createServer(app);
+const io = sockets(server);
+app.use(cors());
+const bodyParser = require("body-parser");
 
-var indexRouter = require('./routes/index');
-var usersRouter = require('./routes/users');
+//Local imports
+const { addConnection, removeConnection, userDetails, roomUserDetails } = require('./controller/chat-controller');
 
-var app = express();
+app.use((req, res, next) => {
+    //TODO:Change allow origin to our website only 
+    res.setHeader("Access-Control-Allow-Origin", "*")
+    res.setHeader("Access-Control-Allow-Headers", "Accept,Origin,X-Requested-With,Content-Type,Authorization,CSRF-TOKEN")
+    res.setHeader("Access-Control-Allow-Methods", "GET,POST,DELETE,PATCH")
+    next();
+})
 
-// view engine setup
-app.set('views', path.join(__dirname, 'views'));
-app.set('view engine', 'jade');
+app.use(bodyParser.urlencoded({ extended: false }))
+app.use(bodyParser.json())
 
-app.use(logger('dev'));
-app.use(express.json());
-app.use(express.urlencoded({ extended: false }));
-app.use(cookieParser());
-app.use(express.static(path.join(__dirname, 'public')));
 
-app.use('/', indexRouter);
-app.use('/users', usersRouter);
+//CHAT CODE START
+io.on('connect', (socket) => {
+    socket.on('newConnection', ({ name, room }, callback) => {
+      const { error, tempUser } = addConnection({ id: socket.id, name, room });
+  
+      if(error) return callback(error);
+  
+      socket.join(tempUser.room);
+  
+      io.to(tempUser.room).emit('onlineUserDetails', { room: tempUser.room, users: roomUserDetails(tempUser.room) });
+  
+      callback();
+    });
+  
+    socket.on('newMessageAction', (message, callback) => {
+      const user = userDetails(socket.id);
+  
+      io.to(user.room).emit('message', { user: user.name, text: message });
+  
+      callback();
+    });
+  
+    socket.on('disconnect', () => {
+      const user = removeConnection(socket.id);
+  
+      if(user) {
+        io.to(user.room).emit('onlineUserDetails', { room: user.room, users: roomUserDetails(user.room)});
+      }
+    })
+  });
 
-// catch 404 and forward to error handler
-app.use(function(req, res, next) {
-  next(createError(404));
-});
 
-// error handler
-app.use(function(err, req, res, next) {
-  // set locals, only providing error in development
-  res.locals.message = err.message;
-  res.locals.error = req.app.get('env') === 'development' ? err : {};
+//CHAT CODE ENDS
 
-  // render the error page
-  res.status(err.status || 500);
-  res.render('error');
-});
 
-module.exports = app;
+
+
+app.use((err,req,res,next)=>{
+    
+    if(res.headerSend){
+        return next(err)
+    }else{
+        console.log("err catcher", err.message);
+        if (err.message) {
+            res.status(500).json({ message: err.message })
+        } else {
+            res.status(500).json({ message: "Server error occured" })
+        }
+    }
+
+})
+
+// mongoConnect(()=>
+    server.listen("5000",(err)=>{
+        if(err){
+            console.log(err,"Listening error")
+        }else{
+            console.log("Listening at 5000...")
+        }
+    })
