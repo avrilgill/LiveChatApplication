@@ -14,3 +14,6 @@ Node.js, Expressjs, SocketIO and React
  4. cd back into the main directory and go to the client
  5. Run npm install, followed by npm start
  6. Finally, enter the URL http://localhost:3000/joinchat
+
+### Screenshots
+<img src="Screenshots/img1.png" width="250px" height="120px">
