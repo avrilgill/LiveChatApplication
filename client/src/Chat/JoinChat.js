@@ -26,10 +26,10 @@ export const JoinChat = () => {
         <div>
           <h2>Select a Chatroom Please</h2>
           <select size="4" onChange={(event) => setRoom(event.target.value)}>
-            <option value="Project Bits">Project Bits</option>
-            <option value="Team at Work">Team at Work</option>
-            <option value="Task Force">Task Force</option>
-            <option value="The Anonymous">The Anonymous</option>
+            <option value="Group 1">Group 1</option>
+            <option value="Group 2">Group 2</option>
+            <option value="Group 3">Group 3</option>
+            <option value="Group 4">Group 4</option>
           </select>
         </div>
         <Link onClick={e => (!name || !room) ? e.preventDefault() : null} to={`/chat?name=${name}&room=${room}`}>

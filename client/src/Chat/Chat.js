@@ -55,7 +55,7 @@ export const Chat = ({ location }) => {
 
           <div className="room-info">
                 <h6>Chatroom Name: {room}</h6>
-            <h6><a href="/">CLOSE CHAT</a></h6>
+            <h6><a href="/joinchat">CLOSE CHAT</a></h6>
           </div>
 
 
