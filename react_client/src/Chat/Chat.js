@@ -1,34 +1,43 @@
 import React, { useState, useEffect } from "react";
 import queryString from 'query-string';
+import { useLocation } from "react-router-dom";
 import io from "socket.io-client";
 import {UserMessages} from './UserMessages'
 import './Chat.css';
 
 let socket;
 
-export const Chat = ({ location }) => {
+export const Chat = () => {
   const [name, setName] = useState('');
   const [room, setRoom] = useState('');
   const [users, setUsers] = useState('');
   const [message, setMessage] = useState('');
   const [messages, setMessages] = useState([]);
-  const ENDPOINT = 'http://localhost:5000/';
+  const ENDPOINT = 'http://localhost:5225/';
+  const location = useLocation();
 
 
   useEffect(() => {
-    const { name, room } = queryString.parse(location.search);
+
+    const search = location.search;
+    const name = new URLSearchParams(search).get('name');
+    const room = new URLSearchParams(search).get('room');
 
     socket = io(ENDPOINT);
 
     setRoom(room);
     setName(name)
 
-    socket.emit('join', { name, room }, (error) => {
+    console.log("Room: ", room);
+    console.log("Username: ", name);
+
+    socket.emit('newConnection', { name, room }, (error) => {
       if(error) {
         alert(error);
       }
     });
   }, [ENDPOINT, location.search]);
+
   
   useEffect(() => {
     socket.on('message', message => {
@@ -44,10 +53,9 @@ export const Chat = ({ location }) => {
     event.preventDefault();
 
     if(message) {
-      socket.emit('sendMessage', message, () => setMessage(''));
+      socket.emit('newMessageAction', message, () => setMessage(''));
     }
   }
-
 
   return (
       <>
