@@ -1,42 +1,52 @@
 //Libraries
-const http = require('http');
-const sockets = require('socket.io');
 const express = require('express');
-const cors = require('cors');
 const app = express();
-const port = 5225
-const server = http.createServer(app);
-const io = sockets(server);
+const PORT = 5225
+
+const http = require('http').Server(app);
+const cors = require('cors');
 app.use(cors());
+
+const io = require('socket.io')(http, {
+    cors: {
+        // TODO: change to react server address
+        origin: "http://localhost:3000"
+    }
+});
+
 const bodyParser = require("body-parser");
 
 //Local imports
 const { addConnection, removeConnection, userDetails, roomUserDetails } = require('./chat-controller');
 
-app.use((req, res, next) => {
-    //TODO:Change allow origin to our website only 
-    res.setHeader("Access-Control-Allow-Origin", "*")
-    res.setHeader("Access-Control-Allow-Headers", "Accept,Origin,X-Requested-With,Content-Type,Authorization,CSRF-TOKEN")
-    res.setHeader("Access-Control-Allow-Methods", "GET,POST,DELETE,PATCH")
-    next();
-})
+// app.use((req, res, next) => {
+//     //TODO:Change allow origin to our website only 
+//     res.setHeader("Access-Control-Allow-Origin", "*")
+//     res.setHeader("Access-Control-Allow-Headers", "Accept,Origin,X-Requested-With,Content-Type,Authorization,CSRF-TOKEN")
+//     res.setHeader("Access-Control-Allow-Methods", "GET,POST,DELETE,PATCH")
+//     next();
+// })
 
 app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json())
 
-// check if server alive
-app.get('/', (req, res) => {
-    res.json({
-      message: 'Server is Alive!',
-    });
-  });
+// // check if server alive
+// app.get('/', (req, res) => {
+//     res.json({
+//       message: 'Server is Alive!',
+//     });
+//   });
 
 
 //CHAT CODE START
 io.on('connect', (socket) => {
     socket.on('newConnection', ({ name, room }, callback) => {
+        console.log("New user connection request!");
         const { error, tempUser } = addConnection({ id: socket.id, name, room });
-
+        
+        console.log("Room: ", room);
+        console.log("Username:", name );
+        
         if (error) return callback(error);
 
         socket.join(tempUser.room);
@@ -55,6 +65,7 @@ io.on('connect', (socket) => {
     });
 
     socket.on('disconnect', () => {
+        console.log("remove connection request!");
         const user = removeConnection(socket.id);
 
         if (user) {
@@ -82,10 +93,10 @@ app.use((err, req, res, next) => {
 })
 
 
-server.listen(port, (err) => {
+http.listen(PORT, (err) => {
     if (err) {
         console.log(err, "Listening error")
     } else {
-        console.log("Listening at", port, "...")
+        console.log("Listening at", PORT, "...")
     }
 })
