@@ -37,4 +37,4 @@ jobs:
           context: ./react_client # specify context for docker copy command  
           push: true
           tags: ghcr.io/${{ env.REPO }}:${{ github.sha }}
-          file: Dockerfile.react
+          file: ./react_client/Dockerfile.react
