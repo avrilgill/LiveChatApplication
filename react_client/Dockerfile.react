@@ -1,14 +1,18 @@
 # declare base image and working directory of the container
 FROM node:18
+
+# create directory as it is not being created in workflow
 WORKDIR /app
 
 # copy files to docker container from the host
-COPY package.json ./
-COPY package-lock.json ./
-COPY ./ ./
+COPY package*.json ./
 
 # install node modules inside container
 RUN npm install
+
+# move required source files
+COPY ./src ./src
+COPY ./public ./public
 
 # Expose container port 5225, deafult protocol is TCP
 EXPOSE 3000
