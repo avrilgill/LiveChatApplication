@@ -16,5 +16,5 @@ Node.js, Expressjs, SocketIO and React
  6. Finally, enter the URL http://localhost:3000/joinchat
 
 ### Screenshots
-<img src="Screenshots/img1.png" width="500px" height="250px">
-<img src="Screenshots/img2.png" width="500px" height="250px">
+<img src="documentation/images/img1.png" width="500px" height="250px">
+<img src="documentation/images/img2.png" width="500px" height="250px">
