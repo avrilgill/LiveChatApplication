@@ -3,7 +3,9 @@ name: Build and deploy application container on Azure Web App
 env:
     AZURE_WEBAPP_NAME: app-name   # TODO add app name
 
-on: 
+on:   
+    push:
+        branches: [ "main" ]
     workflow_dispatch: # only allow manual deployment
 
 permissions:
