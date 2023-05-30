@@ -10,7 +10,7 @@ COPY ./ ./
 # install node modules inside container
 RUN npm install
 
-# Expose the container on port 5225
+# Expose container port 5225
 EXPOSE 5225
 
 # start the node express application

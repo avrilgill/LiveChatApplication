@@ -1,0 +1,21 @@
+# docker compose version
+version: '3.8'
+
+services:
+# setup backend
+  backend:
+    image: socket_backend_image
+    build: 
+      context: ./socket_server
+      dockerfile: Dockerfile.socket
+    ports:
+      - "5225:5225"
+
+# setup frontend
+  frontend:
+    image: react_frontend_image
+    build:
+      context: ./react_client
+      dockerfile: Dockerfile.react
+    ports:
+      - "3000:3000"
