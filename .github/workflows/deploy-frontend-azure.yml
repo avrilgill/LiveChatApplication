@@ -1,4 +1,4 @@
-name: Build and deploy application container on Azure Web App
+name: Frontend Pipeline to deploy container on Azure Web App
 
 env:
     AZURE_WEBAPP_NAME: app-name   # TODO add app name
@@ -39,3 +39,24 @@ jobs:
           push: true
           tags: ghcr.io/${{ env.REPO }}:${{ github.sha }}
           file: ./react_client/Dockerfile.react
+
+#   deploy:
+#     permissions:
+#       contents: none
+#     runs-on: ubuntu-latest
+#     needs: build
+#     environment:
+#       name: 'Development'
+#       url: ${{ steps.deploy-to-webapp.outputs.webapp-url }}
+
+#     steps:
+#       - name: Lowercase the repo name and username
+#         run: echo "REPO=${GITHUB_REPOSITORY,,}" >>${GITHUB_ENV}
+
+#       - name: Deploy to Azure Web App
+#         id: deploy-to-webapp
+#         uses: azure/webapps-deploy@v2
+#         with:
+#           app-name: ${{ env.AZURE_WEBAPP_NAME }}
+#           publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
+#           images: 'ghcr.io/${{ env.REPO }}:${{ github.sha }}'
