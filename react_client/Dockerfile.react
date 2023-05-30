@@ -12,8 +12,8 @@ COPY package*.json ./
 RUN npm install
 
 # move required source files
-COPY ./src ./src
-COPY ./public ./public
+COPY src ./src
+COPY public ./public
 
 # Expose container port 5225, deafult protocol is TCP
 EXPOSE 3000
