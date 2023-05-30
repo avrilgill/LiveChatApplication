@@ -34,6 +34,7 @@ jobs:
       - name: Build and push container image to registry
         uses: docker/build-push-action@v2
         with:
+          context: . # specify context for docker copy command  
           push: true
           tags: ghcr.io/${{ env.REPO }}:${{ github.sha }}
           file: ./react_client/Dockerfile.react
