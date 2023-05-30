@@ -1,12 +1,16 @@
 # LiveChatApplication
-The application allows the users to communicate with each other in real-time. Different chatrooms are isolated from each other. 
-Moreover, there is a list of online members which is updated continuously as a user joins or leaves the chat.
+The application enables real-time communication between users, with distinct chatrooms that are separated from each other. Additionally, there is a constantly updated list of online members, reflecting user activity as they join or exit the chat.
 
 
 ## Technologies 
-Node.js, Expressjs, SocketIO and React
 
-### How to setup the application
+**Backend:** Node.js, Express.js, and Socket.IO and React <br>
+**Frontend:** Node.js, React, and Socket.IO Client
+## Architecture
+
+<img src="documentation/images/architecture.png" width="500px" height="250px">
+
+### How to setup and run the application
 
 #### Option A: Docker Compose - Recommended 
 
@@ -29,6 +33,6 @@ docker-compose up
  6. Run npm install, followed by npm start. It will start the react frontend.
  7. Finally, enter the URL http://localhost:3000/joinchat in your browser.
 
-### Screenshots
+### Application Screenshots
 <img src="documentation/images/img1.png" width="500px" height="250px">
 <img src="documentation/images/img2.png" width="500px" height="250px">
