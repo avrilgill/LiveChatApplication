@@ -1,0 +1,17 @@
+# declare base image and working directory of the container
+FROM node:18
+WORKDIR /app
+
+# copy files to docker container from the host
+COPY package.json ./
+COPY package-lock.json ./
+COPY ./ ./
+
+# install node modules inside container
+RUN npm install
+
+# Expose container port 5225
+EXPOSE 5225
+
+# start the node express application
+CMD ["npm", "start"]
